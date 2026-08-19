@@ -47,6 +47,8 @@ def extract_contours_cleancolor(img, markers, img_alpha, stroma_alpha,
 
         cnt_full = max(cnts_full, key=cv2.contourArea)
         area = cv2.contourArea(cnt_full)
+        if area < 1:
+            continue
 
         # Centroid
         M = cv2.moments(cnt_full)
