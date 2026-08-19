@@ -25,68 +25,7 @@ def watershed(img, sure_fg, unknown):
     img_ws[markers == -1] = [255, 0, 0]
     
     return markers
-
-
-def extract_contours(img, markers, save_path="./results/image_segmentation/contours.png"):
-    """
-    Extract contours and centroids.
-
-    Each region info contains:
-      - coords: full-resolution contour (CHAIN_APPROX_NONE)
-      - centroid: (cx, cy)
-      - area: region area
-    """
     
-    region_info = []
-    img_contour = img.copy()
-
-    # markers: -1 = boundary, 0 = unknown, 1 = background, >=2 = segmented objects
-    for label in np.unique(markers):
-        if label <= 1:
-            continue
-
-        mask = (markers == label).astype(np.uint8)
-
-        # Simplified contour
-        cnts_simple, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-        if not cnts_simple:
-            continue
-
-        cnt_simple = max(cnts_simple, key=cv2.contourArea)
-        area = cv2.contourArea(cnt_simple)
-        if area < 1:
-            continue
-
-        # Full-resolution contour
-        cnts_full, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
-        cnt_full = max(cnts_full, key=cv2.contourArea)
-
-        # Centroid
-        M = cv2.moments(cnt_simple)
-        cx = int(M["m10"] / M["m00"]) if M["m00"] else 0
-        cy = int(M["m01"] / M["m00"]) if M["m00"] else 0
-
-        # Save info
-        region_info.append({
-            "coords_simple": cnt_simple[:, 0, :],
-            "coords": cnt_full[:, 0, :], 
-            "centroid": (cx, cy),
-            "area": area})
-
-        # Visualization
-        cv2.drawContours(img_contour, [cnt_full], -1, (255, 0, 0), 1) # contour:blue
-        cv2.circle(img_contour, (cx, cy), 3, (0, 255, 0), -1) # centroid:green
-        
-        plt.figure(figsize=(6, 6))
-        plt.imshow(cv2.cvtColor(img_contour, cv2.COLOR_BGR2RGB))
-        plt.title(f"Watershed Segmentation (N={len(region_info)})", fontsize=14)
-        plt.axis('off')
-        plt.tight_layout()
-        plt.savefig(save_path)
-        plt.close()
-
-    return region_info
-
 
 def extract_contours_cleancolor(img, markers, img_alpha, stroma_alpha, 
                                 save_path="./results/image_segmentation/final_contours.png"):
@@ -113,9 +52,12 @@ def extract_contours_cleancolor(img, markers, img_alpha, stroma_alpha,
         M = cv2.moments(cnt_full)
         cx = int(M["m10"] / M["m00"]) if M["m00"] else 0
         cy = int(M["m01"] / M["m00"]) if M["m00"] else 0
-
+        
+        sid = len(region_info) + 1
+        
         # Save info
         region_info.append({
+            "id": sid,
             "coords": cnt_full[:, 0, :],
             "centroid": (cx, cy),
             "area": area})
