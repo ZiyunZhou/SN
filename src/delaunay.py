@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 from shapely.geometry import Polygon
 import pandas as pd
 import os
-from src.visualization import plot_distribution
+from src.visualization import plot_length_distribution
 
 
 def collect_delaunay_points(region_info):
@@ -146,10 +146,10 @@ def plot_edge_length_distribution(all_points, tri, exterior_triangles, point_met
     filtered_lengths_ext = filter_lengths(edges_ext, edge_lengths_ext)
 
     if save_dir:
-        plot_distribution(edge_lengths_all, edge_lengths_ext, "All edges", "Exterior edges", "Edge length", f"{save_dir}/{filename_prefix}_original_linear.png")
-        plot_distribution(edge_lengths_all, edge_lengths_ext, "All edges", "Exterior edges", "Edge length", f"{save_dir}/{filename_prefix}_original_log.png", log=True)
-        plot_distribution(filtered_lengths_all, filtered_lengths_ext, "All edges", "Exterior edges", "Edge length", f"{save_dir}/{filename_prefix}_filtered_linear.png")
-        plot_distribution(filtered_lengths_all, filtered_lengths_ext, "All edges", "Exterior edges", "Edge length", f"{save_dir}/{filename_prefix}_filtered_log.png", log=True)
+        plot_length_distribution(edge_lengths_all, edge_lengths_ext, "All edges", "Exterior edges", "Edge length", f"{save_dir}/{filename_prefix}_original_linear.png")
+        plot_length_distribution(edge_lengths_all, edge_lengths_ext, "All edges", "Exterior edges", "Edge length", f"{save_dir}/{filename_prefix}_original_log.png", log=True)
+        plot_length_distribution(filtered_lengths_all, filtered_lengths_ext, "All edges", "Exterior edges", "Edge length", f"{save_dir}/{filename_prefix}_filtered_linear.png")
+        plot_length_distribution(filtered_lengths_all, filtered_lengths_ext, "All edges", "Exterior edges", "Edge length", f"{save_dir}/{filename_prefix}_filtered_log.png", log=True)
 
     if show_stats:
         print("\nDelaunay Edge-Length Statistics")
