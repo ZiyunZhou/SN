@@ -94,6 +94,15 @@ def extract_contours_cleancolor(img, markers, img_alpha, stroma_alpha,
     return region_info
 
 
+def contour_perimeter(coords):
+    """Calculate contour perimeter from consecutive contour points."""
+    coords = np.asarray(coords, dtype=float)
+    diffs = coords - np.roll(coords, shift=1, axis=0)
+    seg_lens = np.sqrt((diffs ** 2).sum(axis=1))
+    
+    return float(seg_lens.sum())
+
+
 def gama_shapefile(img, region_info, save_path="./results/image_segmentation/stroma_space.shp"):
     """Export segmented stromatolite regions as a shapefile for GAMA."""
 
