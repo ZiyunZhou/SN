@@ -51,7 +51,7 @@ region_info = image_segmentation.extract_contours_cleancolor(img, markers, img_a
 
 
 # ------------------------------
-# Delaunay triangulation (all contour points)
+# Delaunay triangulation using all stromatolites contour points
 # ------------------------------
 all_points, structure_ids, point_meta = delaunay.collect_delaunay_points(region_info)
 
